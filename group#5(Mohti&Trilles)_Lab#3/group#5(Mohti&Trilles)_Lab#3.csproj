@@ -7,4 +7,8 @@
     <RootNamespace>group_5_Mohti_Trilles__Lab_3</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
+  </ItemGroup>
+
 </Project>
