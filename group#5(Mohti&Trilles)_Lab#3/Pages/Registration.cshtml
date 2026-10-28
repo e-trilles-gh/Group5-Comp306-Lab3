@@ -1,0 +1,57 @@
+﻿@page
+@model group_5_Mohti_Trilles__Lab_3.Pages.RegistrationModel
+@{
+    Layout = "_RegistrationLayout";
+    ViewData["Title"] = "Registration";
+}
+
+<div class="row jsutify-content-center mt-5">
+    <div class="col-md-5 col-lg-4">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4">Registration</h2>
+
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="User.Username" class="form-label">Username</label>
+
+                        <input asp-for="User.Username" class="form-control" placeholder="Enter your name" />
+
+                        <span asp-validation-for="User.Username" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="User.Email" class="form-label">Email</label>
+
+                        <input asp-for="User.Email" type="email" class="form-control" placeholder="Enter your Email" />
+
+                        <span asp-validation-for="User.Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Password</label>
+
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" />
+
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="RetypePassword" class="form-label">Password</label>
+
+                        <input asp-for="RetypePassword" type="password" class="form-control" placeholder="Retype your password" />
+
+                        <span asp-validation-for="RetypePassword" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Register</button>
+                </form>
+            </div>
+            <div class="card-body p-4">
+                <a asp-page="/Login" class="btn btn-dark">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>

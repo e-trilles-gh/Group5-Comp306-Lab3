@@ -17,7 +17,7 @@
                     <div class="mb-3">
                         <label asp-for="Username" class="form-label">Username</label>
 
-                        <input asp-for="Username" class="form-control" placeholder="Enter your name" />
+                        <input asp-for="Username" class="form-control" placeholder="Enter your username" />
 
                         <span asp-validation-for="Username" class="text-danger"></span>
                     </div>
@@ -32,6 +32,9 @@
 
                     <button type="submit" class="btn btn-primary w-100">Login</button>
                 </form>
+            </div>
+            <div class="card-body p-4">
+                <a asp-page="/Registration" class="btn btn-dark">Register</a>
             </div>
         </div>
     </div>

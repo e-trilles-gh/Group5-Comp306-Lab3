@@ -1,7 +1,12 @@
+using group_5_Mohti_Trilles__Lab_3.Model;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddDbContext<DatabaseContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("connectServer")));
 
 var app = builder.Build();
 
