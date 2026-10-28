@@ -1,0 +1,23 @@
+﻿@page
+@model group_5_Mohti_Trilles__Lab_3.Pages.Episodes.CreateModel
+
+<h2>Upload Episode</h2>
+
+<form method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">Episode Title</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Video" class="form-label">Video File</label>
+        <input asp-for="Video" type="file" accept=".mp4,.mp4,.webm" class="form-control" />
+        <span asp-validation-for="Video" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Uplaod Video</button>
+    <a asp-page="/Episodes/MyVideos" class="btn btn-secondary">Cancel</a>
+
+</form>

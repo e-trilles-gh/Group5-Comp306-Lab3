@@ -1,4 +1,5 @@
 using group_5_Mohti_Trilles__Lab_3.Model;
+using group_5_Mohti_Trilles__Lab_3.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,12 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("connectServer"))
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
+builder.Services.AddScoped<IVideoService, VideoService>();
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 150 * 1024 * 1024;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
