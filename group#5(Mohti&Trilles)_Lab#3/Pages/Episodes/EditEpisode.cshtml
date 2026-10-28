@@ -1,0 +1,41 @@
+﻿@page
+@model group_5_Mohti_Trilles__Lab_3.Pages.Episodes.EditEpisodeModel
+@{
+}
+
+<h2 class="mb-4">Edit Episode</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">Episode Title</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Current Video</label>
+        <p>@Model.CurrentVideoFile</p>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Video" class="form-label">
+            Replace Video (optional)
+        </label>
+        <input asp-for="Video" type="file" accept=".mp4,.mov,.webm" class="form-control" />
+        <span asp-validation-for="Video" class="text-danger"></span>
+        <p class="form-text text-muted">Leave this empty to keep the current video.</p>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ViewerNumber" class="form-label">Viewer Number</label>
+        <input asp-for="ViewerNumber" type="number" min="0" class="form-control" />
+        <span asp-validation-for="ViewerNumber" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+
+    <a  asp-page="/Episodes/MyEpisodes" class="btn btn-secondary">Cancel</a>
+
+</form>
