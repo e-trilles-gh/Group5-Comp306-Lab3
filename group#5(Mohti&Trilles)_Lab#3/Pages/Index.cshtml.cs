@@ -7,7 +7,12 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages
     {
         public IActionResult OnGet()
         {
-            return RedirectToPage("/Login");
+            if (HttpContext.Session.GetInt32("UserId") == null)
+            {
+                return RedirectToPage("/Login");
+            }
+
+            return Page();
         }
     }
 }

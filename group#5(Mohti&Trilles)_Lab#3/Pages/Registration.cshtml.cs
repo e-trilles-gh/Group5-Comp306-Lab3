@@ -36,12 +36,6 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
             try
             {
                 bool userExists = await _databaseContext.User.AnyAsync(u =>
@@ -54,6 +48,7 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages
                         "Username or email is already registered.");
                     return Page();
                 }
+
                 User.PasswordHash = _passwordHasher.HashPassword(User, Password);
 
                 _databaseContext.User.Add(User);
@@ -68,8 +63,6 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages
                 TempData["error"] = "Error registration.";
                 return Page();
             }
-
-            return RedirectToPage();
         }
     }
 }
