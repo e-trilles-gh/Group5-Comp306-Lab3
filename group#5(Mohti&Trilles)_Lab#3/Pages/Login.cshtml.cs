@@ -55,6 +55,7 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages
             }
 
             HttpContext.Session.SetInt32("UserId", user.UserId);
+            HttpContext.Session.SetString("Username", user.Username);
 
             return RedirectToPage("/Index");
         }
