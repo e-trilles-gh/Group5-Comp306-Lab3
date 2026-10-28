@@ -9,5 +9,7 @@ namespace group_5_Mohti_Trilles__Lab_3.Model
         }
 
         public DbSet<User> User { get; set; }
+
+        public DbSet<Episode> Episode { get; set; }
     }
 }
