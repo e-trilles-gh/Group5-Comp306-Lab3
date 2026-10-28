@@ -84,7 +84,7 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
 
             await _databaseContext.SaveChangesAsync();
 
-            return RedirectToPage("/Episode/MyEpisodes");
+            return RedirectToPage("/Episodes/MyEpisodes");
         }
     }
 }

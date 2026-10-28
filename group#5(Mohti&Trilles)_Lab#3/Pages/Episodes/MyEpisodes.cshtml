@@ -1,0 +1,42 @@
+﻿@page
+@model group_5_Mohti_Trilles__Lab_3.Pages.Episodes.MyEpisodesModel
+@{
+}
+
+<h2 class="mb-4">My Episodes</h2>
+
+<div class="mb-3">
+    <a asp-page="/Episodes/Create" class="btn-primary">Upload New Episode</a>
+</div>
+
+@if (Model.Episodes.Count == 0)
+{
+    <p>You have not uploaded any episodes yet.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var episode in Model.Episodes)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@episode.Title</h5>
+
+                        <p class="card-text">
+                            Uploaded: @episode.ReleaseDate.ToString("dd MMM yyyy")
+                        </p>
+
+                        <p class="card-text">
+                            Views: @episode.ViewerNumber
+                        </p>
+
+                        <a asp-page="/Episodes/Edit" asp-route-id="@episode.EpisodeId" class="btn btn-warning">
+                            Edit Episode information
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
