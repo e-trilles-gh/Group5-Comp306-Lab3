@@ -33,5 +33,21 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
 
             return Page();
         }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            var episode = _databaseContext.Episode.Find(id);
+
+            if (episode == null)
+            {
+                return NotFound();
+            }
+
+            _databaseContext.Episode.Remove(episode);
+            _databaseContext.SaveChanges();
+            TempData["success"] = "Deleted successfully";
+
+            return RedirectToPage();
+        }
     }
 }
