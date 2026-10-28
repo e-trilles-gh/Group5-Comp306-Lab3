@@ -31,12 +31,17 @@ else
                             Views: @episode.ViewerNumber
                         </p>
 
-                        <a asp-page="/Episodes/EditEpisode" asp-route-id="@episode.EpisodeId" class="btn btn-warning">
-                            Edit Episode information
-                        </a>
-                        <form asp-action="MyEpisodes">
-                            <button onclick="return confirm('Are you sure??')" asp-page-handler="Delete" asp-route-id="@episode.EpisodeId" class="btn btn-danger">Delete</button>
-                        </form>
+                        <video controls preload="metadata" width="100%">
+                            <source src="@Url.Page("/Episodes/MyEpisodes","Play",new{id=episode.EpisodeId})" />
+                        </video>
+                        <div class="mt-3">
+                            <a asp-page="/Episodes/EditEpisode" asp-route-id="@episode.EpisodeId" class="btn btn-warning">
+                                Edit Episode information
+                            </a>
+                            <form asp-action="MyEpisodes">
+                                <button onclick="return confirm('Are you sure??')" asp-page-handler="Delete" asp-route-id="@episode.EpisodeId" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

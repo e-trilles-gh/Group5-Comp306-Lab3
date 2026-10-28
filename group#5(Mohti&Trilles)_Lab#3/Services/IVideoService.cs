@@ -5,5 +5,7 @@
         Task<string> UploadVideoAsync(IFormFile video);
 
         void DeleteVideo(string fileName);
+
+        string? GetVideoPath(string fileName);
     }
 }

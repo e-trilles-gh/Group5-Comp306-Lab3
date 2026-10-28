@@ -39,5 +39,17 @@
 
             return fileName;
         }
+
+        public string? GetVideoPath(string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName) || Path.GetFileName(fileName) != fileName)
+            {
+                return null;
+            }
+
+            string filePath = Path.Combine(_path, fileName);
+
+            return File.Exists(filePath) ? filePath : null;
+        }
     }
 }
