@@ -9,6 +9,31 @@
 }
 else
 {
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-7">
+            <label for="searchTerm" class="form-label">Search episodes</label>
+            <input type="text"
+                id="searchTerm"
+                name="SearchTerm"
+                value="@Model.SearchTerm"
+                class="form-control"
+                placeholder="Search by title or host username..." />
+        </div>
+
+        <div class="col-md-3">
+            <label for="sortBy" class="form-label">Sort by</label>
+            <select id="sortBy" name="SortBy" class="form-select">
+                <option value="views" selected="@(Model.SortBy == "views")">Most views</option>
+                <option value="newest" selected="@(Model.SortBy == "newest")">Newest first</option>
+                <option value="oldest" selected="@(Model.SortBy == "oldest")">Oldest first</option>
+            </select>
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+    </form>
+
     <div class="row">
         @foreach (var episode in Model.Episodes)
         {
@@ -17,6 +42,10 @@ else
                     <div class="card-body">
 
                         <h5 class="card-title">@episode.Title</h5>
+
+                        <p class="text-muted">
+                            Host: @(episode.User?.Username ?? "Unknown")
+                        </p>
 
                         <p class="text-muted">
                             Released: @episode.ReleaseDate.ToString("dd MMM yyyy")

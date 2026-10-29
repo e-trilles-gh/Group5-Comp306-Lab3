@@ -3,6 +3,7 @@ using group_5_Mohti_Trilles__Lab_3.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
 {
@@ -19,6 +20,12 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
 
         public List<Episode> Episodes { get; set; } = new List<Episode>();
 
+        [BindProperty(SupportsGet = true)]
+        public string SearchTerm { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string SortBy { get; set; }
+
         public async Task<IActionResult> OnGetAsync()
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
@@ -28,8 +35,30 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
                 return RedirectToPage("/Login");
             }
 
-            Episodes = await _databaseContext.Episode.Include(
-                e => e.User).OrderByDescending(e => e.ReleaseDate).ToListAsync();
+            var episodesQuery = _databaseContext
+                .Episode
+                .Include(e => e.User)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(SearchTerm))
+            {
+                episodesQuery = episodesQuery
+                    .Where(e => e.Title.Contains(SearchTerm) ||
+                    (e.User != null && e.User.Username.Contains(SearchTerm)));
+            }
+
+            Episodes = SortBy switch
+            {
+                "newest" => await episodesQuery
+                    .OrderByDescending(e => e.ReleaseDate)
+                    .ToListAsync(),
+                "oldest" => await episodesQuery
+                    .OrderBy(e => e.ReleaseDate)
+                    .ToListAsync(),
+                _ => await episodesQuery
+                    .OrderByDescending(e => e.ViewerNumber)
+                    .ToListAsync()
+            };
 
             return Page();
         }
@@ -65,11 +94,7 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
                 _ => "application/octet-stream"
             };
 
-            return PhysicalFile(
-                filePath,
-                contentType
-//                enableRangeProcessing: true
-            );
+            return PhysicalFile(filePath, contentType);
         }
     }
 }
