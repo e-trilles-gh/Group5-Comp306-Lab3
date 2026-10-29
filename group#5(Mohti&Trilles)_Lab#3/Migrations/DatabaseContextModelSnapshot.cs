@@ -22,6 +22,36 @@ namespace group_5_Mohti_Trilles__Lab_3.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("group_5_Mohti_Trilles__Lab_3.Model.Comment", b =>
+                {
+                    b.Property<int>("CommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"));
+
+                    b.Property<string>("CommentText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EpisodeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("EpisodeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comment");
+                });
+
             modelBuilder.Entity("group_5_Mohti_Trilles__Lab_3.Model.Episode", b =>
                 {
                     b.Property<int>("EpisodeId")
@@ -79,12 +109,31 @@ namespace group_5_Mohti_Trilles__Lab_3.Migrations
                     b.ToTable("User");
                 });
 
+            modelBuilder.Entity("group_5_Mohti_Trilles__Lab_3.Model.Comment", b =>
+                {
+                    b.HasOne("group_5_Mohti_Trilles__Lab_3.Model.Episode", "Episode")
+                        .WithMany()
+                        .HasForeignKey("EpisodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("group_5_Mohti_Trilles__Lab_3.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Episode");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("group_5_Mohti_Trilles__Lab_3.Model.Episode", b =>
                 {
                     b.HasOne("group_5_Mohti_Trilles__Lab_3.Model.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");

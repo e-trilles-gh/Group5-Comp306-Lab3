@@ -15,6 +15,8 @@ namespace group_5_Mohti_Trilles__Lab_3.Model
 
         public int UserId { get; set; }
 
+        public Episode? Episode { get; set; }
 
+        public User? User { get; set; }
     }
 }
