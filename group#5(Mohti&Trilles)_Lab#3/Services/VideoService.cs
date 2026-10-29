@@ -20,9 +20,20 @@
 
             string filePath = Path.Combine(_path, fileName);
 
-            if (File.Exists(filePath))
+            if (!File.Exists(filePath))
+            {
+                return;
+            }
+
+            try
             {
                 File.Delete(filePath);
+            }
+            catch (IOException ex)
+            {
+                throw new IOException(
+                    $"Could not delete video '{fileName}'. " +
+                    $"The file may be in use. Details: {ex.Message}", ex);
             }
         }
 

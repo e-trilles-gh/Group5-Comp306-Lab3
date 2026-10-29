@@ -53,7 +53,24 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
                 return NotFound();
             }
 
-            _videoService.DeleteVideo(episode.VideoFile);
+            try
+            {
+                _videoService.DeleteVideo(episode.VideoFile);
+            }
+            catch (IOException ex)
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    $"Unable to delete the video file. {ex.Message}");
+
+                Episodes = await _databaseContext.Episode
+                    .Where(e => e.UserId == userId.Value)
+                    .OrderByDescending(e => e.ReleaseDate)
+                    .ToListAsync();
+
+                return Page();
+            }
+            
 
             _databaseContext.Episode.Remove(episode);
 
@@ -96,7 +113,17 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
                 _ => "application/octet-stream"
             };
 
-            return PhysicalFile(filePath, contentType);
+            var stream = new FileStream(
+                filePath,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.ReadWrite | FileShare.Delete
+            );
+
+            return new FileStreamResult(stream, contentType)
+            {
+                EnableRangeProcessing = true
+            };
         }
     }
 }

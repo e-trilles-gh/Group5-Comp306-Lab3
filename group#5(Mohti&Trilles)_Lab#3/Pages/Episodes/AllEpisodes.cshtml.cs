@@ -94,7 +94,17 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
                 _ => "application/octet-stream"
             };
 
-            return PhysicalFile(filePath, contentType);
+            var stream = new FileStream(
+                filePath,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.ReadWrite | FileShare.Delete
+            );
+
+            return new FileStreamResult(stream, contentType)
+            {
+                EnableRangeProcessing = true
+            };
         }
     }
 }
