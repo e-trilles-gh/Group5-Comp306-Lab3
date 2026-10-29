@@ -60,6 +60,12 @@ else
                                 src="@Url.Page("/Episodes/AllEpisodes","Play",new{id=episode.EpisodeId})" >
                             Your brower does not support video playback.
                         </video>
+
+                        <a asp-page="/Episodes/EpisodeDetails"
+                            asp-route-id="@episode.EpisodeId"
+                            class="btn-primary w-100 mt-3">
+                            See Episode & Comments
+                        </a>
                     </div>
                 </div>
             </div>
