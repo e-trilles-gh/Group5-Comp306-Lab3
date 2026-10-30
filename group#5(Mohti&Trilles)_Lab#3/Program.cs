@@ -1,8 +1,13 @@
+using Amazon.DynamoDBv2;
+using Amazon.Extensions.NETCore.Setup;
 using group_5_Mohti_Trilles__Lab_3.Model;
 using group_5_Mohti_Trilles__Lab_3.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAWSService<IAmazonDynamoDB>();
+builder.Services.AddScoped<StatisticsService>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
