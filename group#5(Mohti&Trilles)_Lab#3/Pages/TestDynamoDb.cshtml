@@ -1,0 +1,29 @@
+﻿@page
+@model group_5_Mohti_Trilles__Lab_3.Pages.TestDynamoDbModel
+
+<h2>DynamoDb Connection Test</h2>
+
+<p>@Model.Message</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>ID</th>
+            <th>Value</th>
+            <th>Last Updated</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model.Statistics)
+        {
+            <tr>
+                <td>@item.StatisticType</td>
+                <td>@item.StatisticId</td>
+                <td>@item.Value</td>
+                <td>@item.LastUpdated</td>
+            </tr>
+        }
+    </tbody>
+</table>

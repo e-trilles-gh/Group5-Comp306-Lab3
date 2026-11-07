@@ -7,6 +7,25 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var credentialPath = Path.Combine(
+    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+    ".aws",
+    "credentials"
+    );
+
+var profileChain = new Amazon.Runtime.CredentialManagement.CredentialProfileStoreChain(credentialPath);
+
+if (!profileChain.TryGetAWSCredentials("podcast-statistics-lab3", out var awsCredentials))
+{
+    throw new Exception("AWS credentials profile not found.");
+}
+
+builder.Services.AddDefaultAWSOptions(new Amazon.Extensions.NETCore.Setup.AWSOptions
+{
+    Credentials = awsCredentials,
+    Region = Amazon.RegionEndpoint.USEast1
+});
+
 // Register AWS services and DynamoDB Context
 builder.Services.AddAWSService<IAmazonDynamoDB>();
 builder.Services.AddScoped<IDynamoDBContext, DynamoDBContext>();
