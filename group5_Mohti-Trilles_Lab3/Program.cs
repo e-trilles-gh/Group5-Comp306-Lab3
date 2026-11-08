@@ -3,33 +3,34 @@ using Amazon.DynamoDBv2.DataModel;
 using Amazon.Extensions.NETCore.Setup;
 using group_5_Mohti_Trilles__Lab_3.Model;
 using group_5_Mohti_Trilles__Lab_3.Services;
+using Amazon.SimpleSystemsManagement;
+using Amazon.SimpleSystemsManagement.Model;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var credentialPath = Path.Combine(
-    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-    ".aws",
-    "credentials"
-    );
-
-var profileChain = new Amazon.Runtime.CredentialManagement.CredentialProfileStoreChain(credentialPath);
-
-if (!profileChain.TryGetAWSCredentials("podcast-statistics-lab3", out var awsCredentials))
+var awsOptions = new Amazon.Extensions.NETCore.Setup.AWSOptions
 {
-    throw new Exception("AWS credentials profile not found.");
-}
-
-builder.Services.AddDefaultAWSOptions(new Amazon.Extensions.NETCore.Setup.AWSOptions
-{
-    Credentials = awsCredentials,
     Region = Amazon.RegionEndpoint.USEast1
-});
+};
 
-// Register AWS services and DynamoDB Context
-builder.Services.AddAWSService<IAmazonDynamoDB>();
-builder.Services.AddScoped<IDynamoDBContext, DynamoDBContext>();
-builder.Services.AddScoped<StatisticsService>();
+if (builder.Environment.IsDevelopment())
+{
+    var credentialPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+        ".aws",
+        "credentials"
+        );
+
+    var profileChain = new Amazon.Runtime.CredentialManagement.CredentialProfileStoreChain(credentialPath);
+
+    if (!profileChain.TryGetAWSCredentials("podcast-statistics-lab3", out var awsCredentials))
+    {
+        throw new Exception("AWS credentials profile not found.");
+    }
+
+    awsOptions.Credentials = awsCredentials;
+}
 
 // Add services to the container.
 builder.Services.AddRazorPages();
