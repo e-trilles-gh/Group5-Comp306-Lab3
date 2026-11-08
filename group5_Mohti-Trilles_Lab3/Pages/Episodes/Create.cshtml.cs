@@ -5,18 +5,22 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using Amazon.S3;
+using Amazon.S3.Model;
 
 namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
 {
     public class CreateModel : PageModel
     {
         private readonly DatabaseContext _databaseContext;
-        private readonly IVideoService _videoService;
+        private readonly IAmazonS3 _s3Client;
 
-        public CreateModel(DatabaseContext databaseContext, IVideoService videoService)
+        private const string BucketName = "my-podcast-videos-2026";
+
+        public CreateModel(DatabaseContext databaseContext, IAmazonS3 s3Client)
         {
             _databaseContext = databaseContext;
-            _videoService = videoService;
+            _s3Client = s3Client;
         }
 
         [BindProperty]
@@ -69,7 +73,19 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
                 return Page();
             }
 
-            string fileName = await _videoService.UploadVideoAsync(Video!);
+            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(Video!.FileName).ToLowerInvariant();
+
+            using (var stream = Video.OpenReadStream())
+            {
+                var request = new PutObjectRequest
+                {
+                    BucketName = BucketName,
+                    Key = fileName,
+                    InputStream = stream
+                };
+
+                await _s3Client.PutObjectAsync(request);
+            }
 
             Episode episode = new Episode
             {

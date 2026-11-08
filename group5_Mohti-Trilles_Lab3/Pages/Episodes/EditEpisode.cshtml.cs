@@ -5,18 +5,22 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
+using Amazon.S3;
+using Amazon.S3.Model;
 
 namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
 {
     public class EditEpisodeModel : PageModel
     {
         private readonly DatabaseContext _databaseContext;
-        private readonly IVideoService _videoService;
+        private readonly IAmazonS3 _s3Client;
 
-        public EditEpisodeModel(DatabaseContext databaseContext, IVideoService videoService)
+        private const string BucketName = "my-podcast-videos-2026";
+
+        public EditEpisodeModel(DatabaseContext databaseContext, IAmazonS3 s3Client)
         {
             _databaseContext = databaseContext;
-            _videoService = videoService;
+            _s3Client = s3Client;
         }
 
         [BindProperty]
@@ -107,7 +111,21 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
 
             if (Video != null && Video.Length > 0)
             {
-                string newVideoFile = await _videoService.UploadVideoAsync(Video);
+                string newVideoFile = Guid.NewGuid().ToString() + Path.GetExtension(Video.FileName).ToLowerInvariant();
+
+                //uploads the new video to s3
+                using (var stream = Video.OpenReadStream())
+                {
+                    var request = new PutObjectRequest
+                    {
+                        BucketName = BucketName,
+                        Key = newVideoFile,
+                        InputStream = stream,
+                        ContentType = Video.ContentType
+                    };
+
+                    await _s3Client.PutObjectAsync(request);
+                }
 
                 episode.VideoFile = newVideoFile;
             }
@@ -117,12 +135,17 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
 
             await _databaseContext.SaveChangesAsync();
 
+            //Deletes the old video only after the database is updated
             if (Video != null && Video.Length > 0)
             {
-                _videoService.DeleteVideo(oldVideoFile);
+                await _s3Client.DeleteObjectAsync(new DeleteObjectRequest
+                {
+                    BucketName = BucketName,
+                    Key = oldVideoFile
+                });
             }
 
-            return RedirectToPage("/Episodes/MyEpisodes");
+            return RedirectToPage("/Episodes/MyEpisode");
         }
     }
 }
