@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Amazon.Runtime;
 using Amazon;
 using Amazon.Runtime.CredentialManagement;
+using Amazon.S3;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,6 +81,10 @@ builder.WebHost.ConfigureKestrel(options =>
 {
     options.Limits.MaxRequestBodySize = 150 * 1024 * 1024;
 });
+
+//elastic beanstalk ec2
+builder.Services.AddSingleton<IAmazonS3>(new AmazonS3Client(awsRegion));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

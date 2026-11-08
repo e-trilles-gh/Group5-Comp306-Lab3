@@ -1,3 +1,4 @@
+using Amazon.S3;
 using group_5_Mohti_Trilles__Lab_3.Model;
 using group_5_Mohti_Trilles__Lab_3.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +11,14 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
     {
         private readonly DatabaseContext _databaseContext;
         private readonly IVideoService _videoService;
+        private readonly IAmazonS3 _s3Client;
+        private const string BucketName = "my-podcast-videos-2026";
 
-        public EpisodeDetailsModel(DatabaseContext databaseContext, IVideoService videoService)
+        public EpisodeDetailsModel(DatabaseContext databaseContext, IVideoService videoService, IAmazonS3 s3Client)
         {
             _databaseContext = databaseContext;
             _videoService = videoService;
+            _s3Client = s3Client;
         }
 
         public Episode Episode { get; set; }
@@ -210,6 +214,23 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
                 return NotFound();
             }
 
+            string videoFile = episode.VideoFile;
+
+            videoFile = Path.GetFileName(videoFile);
+
+            var request = new Amazon.S3.Model.GetPreSignedUrlRequest
+            {
+                BucketName = BucketName,
+                Key = videoFile,
+                Expires = DateTime.Now.AddMinutes(30),
+                Verb = Amazon.S3.HttpVerb.GET
+            };
+
+            string videoUrl = _s3Client.GetPreSignedURL(request);
+
+            return Redirect(videoUrl);
+
+            /*
             string? filePath = _videoService.GetVideoPath(episode.VideoFile);
 
             if (filePath == null)
@@ -236,6 +257,7 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
             {
                 EnableRangeProcessing = true
             };
+            */
         }
     }
 }

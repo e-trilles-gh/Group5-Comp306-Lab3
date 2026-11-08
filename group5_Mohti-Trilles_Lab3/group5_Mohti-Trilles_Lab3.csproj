@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include=".platform\nginx\conf.d\" />
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\Videos\" />
   </ItemGroup>
@@ -15,6 +16,7 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="4.0.110.2" />
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="4.0.102.10" />
+    <PackageReference Include="AWSSDK.S3" Version="4.0.104.11" />
     <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="4.0.105" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.33" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.14">
@@ -23,4 +25,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include=".platform/nginx/conf.d/client_max_body_size.conf">
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
