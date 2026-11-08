@@ -6,13 +6,15 @@ using group_5_Mohti_Trilles__Lab_3.Services;
 using Amazon.SimpleSystemsManagement;
 using Amazon.SimpleSystemsManagement.Model;
 using Microsoft.EntityFrameworkCore;
+using Amazon.Runtime;
+using Amazon;
+using Amazon.Runtime.CredentialManagement;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var awsOptions = new Amazon.Extensions.NETCore.Setup.AWSOptions
-{
-    Region = Amazon.RegionEndpoint.USEast1
-};
+var awsRegion = RegionEndpoint.USEast1;
+
+AWSCredentials? awsCredentials = null;
 
 if (builder.Environment.IsDevelopment())
 {
@@ -22,21 +24,52 @@ if (builder.Environment.IsDevelopment())
         "credentials"
         );
 
-    var profileChain = new Amazon.Runtime.CredentialManagement.CredentialProfileStoreChain(credentialPath);
+    var profileChain = new CredentialProfileStoreChain(credentialPath);
 
-    if (!profileChain.TryGetAWSCredentials("podcast-statistics-lab3", out var awsCredentials))
+    if (!profileChain.TryGetAWSCredentials("podcast-statistics-lab3", out awsCredentials))
     {
         throw new Exception("AWS credentials profile not found.");
     }
-
-    awsOptions.Credentials = awsCredentials;
 }
+
+//Configure AWS
+var awsOptions = new AWSOptions
+{
+    Credentials = awsCredentials,
+    Region = awsRegion
+};
+
+builder.Services.AddDefaultAWSOptions(awsOptions);
+
+//DynamoDB
+builder.Services.AddAWSService<IAmazonDynamoDB>();
+builder.Services.AddScoped<IDynamoDBContext, DynamoDBContext>();
+builder.Services.AddScoped<StatisticsService>();
+
+//get connection string from parameter store
+string connectionString;
+
+using (var ssmClient = awsCredentials != null
+    ? new AmazonSimpleSystemsManagementClient(awsCredentials, awsRegion)
+    : new AmazonSimpleSystemsManagementClient(awsRegion))
+{
+    var parameter = await ssmClient.GetParameterAsync(
+        new GetParameterRequest
+        {
+            Name = "/podcast/ConnectionString",
+            WithDecryption = true
+        });
+    connectionString = parameter.Parameter.Value;
+}
+
+//SQL Server connection
+builder.Services.AddDbContext<DatabaseContext>(options =>
+options.UseSqlServer(connectionString));
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddDbContext<DatabaseContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("connectServer")));
+
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
