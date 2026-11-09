@@ -145,7 +145,7 @@ namespace group_5_Mohti_Trilles__Lab_3.Pages.Episodes
                 });
             }
 
-            return RedirectToPage("/Episodes/MyEpisode");
+            return RedirectToPage("/Episodes/MyEpisodes");
         }
     }
 }

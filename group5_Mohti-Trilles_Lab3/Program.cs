@@ -11,6 +11,17 @@ using Amazon;
 using Amazon.Runtime.CredentialManagement;
 using Amazon.S3;
 
+/* 
+References:
+Navigation - https://getbootstrap.com/docs/5.3/components/navbar/
+css - https://bootswatch.com/
+used sample videos - https://www.pexels.com/videos/
+razor pages tutorial - https://www.youtube.com/watch?v=QmoCAjYDYSI
+RDS - https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html
+DynamoDB - https://docs.aws.amazon.com/amazondynamodb/latest/developerguide
+Elastic Beanstalk - https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/Welcome.html
+*/
+
 var builder = WebApplication.CreateBuilder(args);
 
 var awsRegion = RegionEndpoint.USEast1;
